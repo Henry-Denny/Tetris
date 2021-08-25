@@ -1,10 +1,13 @@
 #include "Game.hpp"
+#include "Constants.hpp"
 
-Game::Game() : m_window(k_gridSize)
+Game::Game()
 {
     Setup();
     RestartClock();
 }
+
+Game::~Game() {}
 
 void Game::Setup()
 {
@@ -20,19 +23,16 @@ void Game::HandleInput()
 
 void Game::Update()
 {
-    if (m_elapsed >= k_tickTime)
+    if (m_elapsed >= game_constants::k_tickTime)
     {
         Tick();
+        m_elapsed -= game_constants::k_tickTime;
     }
 }
 
 void Game::Tick()
 {
-    m_tetroMgr.GetCurrentTetromino()->Fall();
-    if (m_tetroMgr.GetCurrentTetromino()->IsFrozen())
-    {
-        m_tetroMgr.CreateRandTetromino();
-    }
+    m_tetroMgr.UpdateTetrominos();
 }
 
 void Game::DrawScene()
@@ -46,3 +46,5 @@ void Game::RestartClock()
 {
     m_elapsed += m_clock.restart().asSeconds();
 }
+
+Window* Game::GetWindow() { return &m_window; }

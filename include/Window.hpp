@@ -6,7 +6,7 @@
 class Window
 {
 public:
-    Window(sf::Vector2u l_winSize);
+    Window();
     ~Window();
 
     void Create(sf::Vector2u l_winSize);

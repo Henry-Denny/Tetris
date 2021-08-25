@@ -1,2 +1,2 @@
-Tetris.exe : *.cpp
-	g++ -o Tetris.exe *.cpp *.dll -I ./include
+Tetris.exe : ./src/*.cpp ./include/*.hpp
+	g++ -o ./bin/Tetris.exe ./src/*.cpp ./bin/*.dll -I ./include

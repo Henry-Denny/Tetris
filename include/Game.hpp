@@ -1,14 +1,10 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
-#include <System.hpp>
+#include <SFML/System.hpp>
 
 #include "Window.hpp"
 #include "TetrominoManager.hpp"
-
-static const float k_tickTime = 0.5f;
-static const int k_squareSize = 32;
-static const sf::Vector2u k_gridSize(16, 64);
 
 class Game
 {

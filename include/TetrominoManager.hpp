@@ -16,7 +16,8 @@ enum class TetrominoType
     O,
     S,
     T,
-    Z
+    Z,
+    Count
 };
 
 class TetrominoManager
@@ -26,17 +27,16 @@ public:
     ~TetrominoManager();
 
     void Reset();
-    void CreateRandTetromino();
+    Tetromino* CreateRandTetromino();
+    void UpdateTetrominos();
     void DrawTetrominos(sf::RenderWindow *l_wind);
 
-    Tetromino* GetCurrentTetromino();
-
 private:
-    std::unordered_map<TetrominoType, std::function<Tetromino*>(void)> tetrominoFactory;
-    Tetromino *currentTetromino;
-    std::vector<Tetromino*> frozenTetrominos;
+    Tetromino *m_currentTetromino;
+    std::vector<Tetromino*> m_frozenTetrominos;
 
-    void CreateTetromino(TetrominoType l_type);
+    Tetromino* CreateTetromino(TetrominoType l_type);
+    void DeleteTetrominos();
 };
 
 #endif
