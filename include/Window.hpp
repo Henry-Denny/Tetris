@@ -3,10 +3,12 @@
 
 #include <SFML/Graphics.hpp>
 
+class TetrominoManager;
+
 class Window
 {
 public:
-    Window();
+    Window(TetrominoManager *l_tetrominoManager);
     ~Window();
 
     void Create(sf::Vector2u l_winSize);
@@ -22,6 +24,7 @@ public:
 private:
     bool m_done;
     sf::RenderWindow m_window;
+    TetrominoManager *m_tetroMgr;
 };
 
 #endif

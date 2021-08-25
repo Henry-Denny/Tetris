@@ -1,7 +1,8 @@
 #include "Window.hpp"
 #include "Constants.hpp"
+#include "TetrominoManager.hpp"
 
-Window::Window()
+Window::Window(TetrominoManager *l_tetrominoManager) : m_tetroMgr(l_tetrominoManager)
 {
     sf::Vector2u l_winSize = sf::Vector2u
     (
@@ -34,6 +35,15 @@ void Window::HandleEvents()
         {
             m_done = true;
         }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+        {
+            m_tetroMgr->GetCurrentTetromino()->MoveLeft();
+        }
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+        {
+            m_tetroMgr->GetCurrentTetromino()->MoveRight();
+        }
+        
     }
 }
 

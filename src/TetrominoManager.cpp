@@ -78,3 +78,5 @@ Tetromino* TetrominoManager::CreateRandTetromino()
     TetrominoType randType = TetrominoType(rand() % int(TetrominoType::Count));
     return CreateTetromino(randType);
 }
+
+Tetromino* TetrominoManager::GetCurrentTetromino() { return m_currentTetromino; }

@@ -1,7 +1,7 @@
 #include "Game.hpp"
 #include "Constants.hpp"
 
-Game::Game()
+Game::Game() : m_window(&m_tetroMgr)
 {
     Setup();
     RestartClock();

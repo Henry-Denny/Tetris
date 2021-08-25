@@ -32,3 +32,6 @@ void Tetromino::Fall()
 {
     m_position.y += 1;
 }
+
+void Tetromino::MoveLeft() { m_position.x -= 1; }
+void Tetromino::MoveRight() { m_position.x += 1; }

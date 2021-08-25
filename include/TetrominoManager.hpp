@@ -31,6 +31,8 @@ public:
     void UpdateTetrominos();
     void DrawTetrominos(sf::RenderWindow *l_wind);
 
+    Tetromino* GetCurrentTetromino();
+
 private:
     Tetromino *m_currentTetromino;
     std::vector<Tetromino*> m_frozenTetrominos;

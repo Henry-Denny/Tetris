@@ -13,6 +13,8 @@ public:
 
     void Fall();
     void RotateCW();
+    void MoveRight();
+    void MoveLeft();
     void Draw(sf::RenderWindow *l_win);
 
     bool IsFrozen();
