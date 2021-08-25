@@ -15,6 +15,7 @@ public:
     bool IsFrozen();
 
 private:
+    sf::RectangleShape m_rect;
     sf::Vector2i m_position;
     bool m_frozen;
 };
