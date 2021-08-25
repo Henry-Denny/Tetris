@@ -6,10 +6,10 @@
 class Window
 {
 public:
-    Window(sf::Vector2u k_gridSize);
+    Window(sf::Vector2u l_winSize);
     ~Window();
 
-    void Create();
+    void Create(sf::Vector2u l_winSize);
     void Setup();
     void HandleEvents();
 
