@@ -10,9 +10,9 @@ TetrominoManager::~TetrominoManager()
 
 void TetrominoManager::DeleteTetrominos()
 {
+    std::cout << "Deleting Tetrominos" << std::endl;
     if (m_currentTetromino)
     {
-        std::cout << "1";
         delete m_currentTetromino;
         m_currentTetromino = nullptr;
     }
@@ -48,6 +48,7 @@ void TetrominoManager::DrawTetrominos(sf::RenderWindow *l_wind)
 
 Tetromino* TetrominoManager::CreateTetromino(TetrominoType l_type)
 {
+    std::cout << (int)l_type << std::endl;
     switch (l_type)
     {
     case (TetrominoType::I):
@@ -66,7 +67,10 @@ Tetromino* TetrominoManager::CreateTetromino(TetrominoType l_type)
         return new Tetromino({sf::Vector2i(-1, 0), sf::Vector2i(0, 0), sf::Vector2i(0, -1), sf::Vector2i(1, -1)}, true, sf::Color::Green);
         break;
     case (TetrominoType::T):
-        return new Tetromino({sf::Vector2i(1, 0), sf::Vector2i(0, 0), sf::Vector2i(0, -1), sf::Vector2i(-1, -1)}, true, sf::Color::Magenta);
+        return new Tetromino({sf::Vector2i(0, -1), sf::Vector2i(0, 0), sf::Vector2i(-1, 0), sf::Vector2i(1, 0)}, true, sf::Color::Magenta);
+        break;
+    case (TetrominoType::Z):
+        return new Tetromino({sf::Vector2i(1, 0), sf::Vector2i(0, 0), sf::Vector2i(0, -1), sf::Vector2i(-1, -1)}, true, sf::Color::Red);
         break;
     default:
         break;
