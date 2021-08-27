@@ -35,13 +35,22 @@ void Window::HandleEvents()
         {
             m_done = true;
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+        else if (ev.type == sf::Event::KeyPressed)
         {
-            m_tetroMgr->GetCurrentTetromino()->MoveLeft();
-        }
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-        {
-            m_tetroMgr->GetCurrentTetromino()->MoveRight();
+            switch (ev.key.code)
+            {
+                case (sf::Keyboard::A):
+                    m_tetroMgr->GetCurrentTetromino()->MoveLeft();
+                    break;
+                case (sf::Keyboard::D):
+                    m_tetroMgr->GetCurrentTetromino()->MoveRight();
+                    break;
+                case (sf::Keyboard::W):
+                    m_tetroMgr->GetCurrentTetromino()->RotateCW();
+                    break;
+                default:
+                    break;
+            }
         }
         
     }

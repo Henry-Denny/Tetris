@@ -27,7 +27,7 @@ public:
     ~TetrominoManager();
 
     void Reset();
-    Tetromino* CreateRandTetromino();
+    Tetromino* GetNextTetromino();
     void UpdateTetrominos();
     void DrawTetrominos(sf::RenderWindow *l_wind);
 

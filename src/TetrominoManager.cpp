@@ -10,7 +10,6 @@ TetrominoManager::~TetrominoManager()
 
 void TetrominoManager::DeleteTetrominos()
 {
-    std::cout << "Deleting Tetrominos" << std::endl;
     if (m_currentTetromino)
     {
         delete m_currentTetromino;
@@ -28,11 +27,16 @@ void TetrominoManager::DeleteTetrominos()
 void TetrominoManager::Reset()
 {
     DeleteTetrominos();
-    m_currentTetromino = CreateRandTetromino();
+    m_currentTetromino = GetNextTetromino();
 }
 
 void TetrominoManager::UpdateTetrominos()
 {
+    if (m_currentTetromino->IsFrozen())
+    {
+        m_frozenTetrominos.push_back(m_currentTetromino);
+        m_currentTetromino = GetNextTetromino();
+    }
     m_currentTetromino->Fall();
     // If stuck --> freeze tetromino, create new tetromino
 }
@@ -48,37 +52,71 @@ void TetrominoManager::DrawTetrominos(sf::RenderWindow *l_wind)
 
 Tetromino* TetrominoManager::CreateTetromino(TetrominoType l_type)
 {
-    std::cout << (int)l_type << std::endl;
     switch (l_type)
     {
     case (TetrominoType::I):
-        return new Tetromino({sf::Vector2i(0, -1), sf::Vector2i(0, 0), sf::Vector2i(0, 1), sf::Vector2i(0, 2)}, true, sf::Color::Cyan);
+        return new Tetromino
+        (
+            { sf::Vector2i(0, 1), sf::Vector2i(1, 1), sf::Vector2i(2, 1), sf::Vector2i(3, 1) },
+            sf::Vector2f(1.5f, 1.5f),
+            sf::Color::Cyan
+        );
         break;
     case (TetrominoType::J):
-        return new Tetromino({sf::Vector2i(0, -1), sf::Vector2i(0, 0), sf::Vector2i(0, 1), sf::Vector2i(-1, 1)}, true, sf::Color::Blue);
+        return new Tetromino
+        (
+            { sf::Vector2i(0, 0), sf::Vector2i(0, 1), sf::Vector2i(1, 1), sf::Vector2i(2, 1) },
+            sf::Vector2f(1, 1),
+            sf::Color::Blue
+        );
         break;
     case (TetrominoType::L):
-        return new Tetromino({sf::Vector2i(0, -1), sf::Vector2i(0, 0), sf::Vector2i(0, 1), sf::Vector2i(1, 1)}, true, sf::Color(255, 127, 0));
+        return new Tetromino
+        (
+            { sf::Vector2i(0, 1), sf::Vector2i(1, 1), sf::Vector2i(2, 1), sf::Vector2i(2, 0) },
+            sf::Vector2f(1, 1),
+            sf::Color(255, 127, 0)
+        );
         break;
     case (TetrominoType::O):
-        return new Tetromino({sf::Vector2i(0, 0), sf::Vector2i(1, 0), sf::Vector2i(0, 1), sf::Vector2i(1, 1)}, false, sf::Color::Yellow);
+        return new Tetromino
+        (
+            { sf::Vector2i(1, 0), sf::Vector2i(1, 1), sf::Vector2i(2, 0), sf::Vector2i(2, 1) },
+            sf::Vector2f(1.5f, 0.5f),
+            sf::Color::Yellow
+        );
         break;
     case (TetrominoType::S):
-        return new Tetromino({sf::Vector2i(-1, 0), sf::Vector2i(0, 0), sf::Vector2i(0, -1), sf::Vector2i(1, -1)}, true, sf::Color::Green);
+        return new Tetromino
+        (
+            { sf::Vector2i(0, 1), sf::Vector2i(1, 1), sf::Vector2i(1, 0), sf::Vector2i(2, 0) },
+            sf::Vector2f(1, 1),
+            sf::Color::Green
+        );
         break;
     case (TetrominoType::T):
-        return new Tetromino({sf::Vector2i(0, -1), sf::Vector2i(0, 0), sf::Vector2i(-1, 0), sf::Vector2i(1, 0)}, true, sf::Color::Magenta);
+        return new Tetromino
+        (
+            { sf::Vector2i(0, 1), sf::Vector2i(1, 1), sf::Vector2i(2, 1), sf::Vector2i(1, 0) },
+            sf::Vector2f(1, 1),
+            sf::Color::Magenta);
         break;
     case (TetrominoType::Z):
-        return new Tetromino({sf::Vector2i(1, 0), sf::Vector2i(0, 0), sf::Vector2i(0, -1), sf::Vector2i(-1, -1)}, true, sf::Color::Red);
+        return new Tetromino
+        (
+            { sf::Vector2i(0, 0), sf::Vector2i(1, 0), sf::Vector2i(1, 1), sf::Vector2i(2, 1) },
+            sf::Vector2f(1, 1),
+            sf::Color::Red
+        );
         break;
     default:
         break;
     }
 }
 
-Tetromino* TetrominoManager::CreateRandTetromino()
+Tetromino* TetrominoManager::GetNextTetromino()
 {
+    std::cout << "Getting next Tetromino" << std::endl;
     TetrominoType randType = TetrominoType(rand() % int(TetrominoType::Count));
     return CreateTetromino(randType);
 }
