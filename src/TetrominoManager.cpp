@@ -30,14 +30,18 @@ void TetrominoManager::Reset()
     m_currentTetromino = GetNextTetromino();
 }
 
-void TetrominoManager::UpdateTetrominos()
+bool TetrominoManager::Continue()
 {
     if (!m_currentTetromino->Fall())
     {
+        if (m_currentTetromino->TouchesCeiling())
+        {
+            return false;
+        }
         m_frozenTetrominos.push_back(m_currentTetromino);
         m_currentTetromino = GetNextTetromino();
     }
-    // If stuck --> freeze tetromino, create new tetromino
+    return true;
 }
 
 void TetrominoManager::DrawTetrominos(sf::RenderWindow *l_wind)
@@ -122,7 +126,6 @@ Tetromino* TetrominoManager::CreateTetromino(TetrominoType l_type)
 
 Tetromino* TetrominoManager::GetNextTetromino()
 {
-    std::cout << "Getting next Tetromino" << std::endl;
     TetrominoType randType = TetrominoType(rand() % int(TetrominoType::Count));
     return CreateTetromino(randType);
 }

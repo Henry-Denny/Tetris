@@ -1,11 +1,10 @@
 #include "Tetromino.hpp"
 #include "TetrominoManager.hpp"
-#include <iostream>
 
 Tetromino::Tetromino(TetrominoManager *l_tetrominoManager, const std::array<sf::Vector2i, 4> &l_squarePositions, sf::Vector2f l_centreOfRotation, sf::Color l_colour)
     : m_squarePositions(l_squarePositions), m_CoR(l_centreOfRotation), m_tetroMgr(l_tetrominoManager)
 {
-    m_position = sf::Vector2i((game_constants::k_gridSize.x / 2) - 1, 0);
+    m_position = sf::Vector2i((game_constants::k_gridSize.x / 2) - 2, -2);
 
     m_rect.setFillColor(l_colour);
     m_rect.setSize(sf::Vector2f(game_constants::k_squareSize - 1, game_constants::k_squareSize - 1));
@@ -31,26 +30,10 @@ bool Tetromino::Fall()
     const std::vector<Tetromino*> &l_frozenTetrominos = m_tetroMgr->GetFrozenTetrominos();
     int originalY = m_position.y;
     m_position.y += 1;
-    std::array<sf::Vector2i, 4> projectedTilePositions = GetTilePositions();
-    
-    for (auto &projTilePos : projectedTilePositions)
+    if (IntersectsTetromino() || BelowFloor())
     {
-        if (projTilePos.y >= game_constants::k_gridSize.y)
-        {
-            m_position.y = originalY;
-            return false;
-        }
-    }
-    for (auto &projTilePos : projectedTilePositions)
-    {
-        for (auto &frozenTetro : l_frozenTetrominos)
-        {
-            if (intersects(projectedTilePositions, frozenTetro->GetTilePositions()))
-            {
-                m_position.y = originalY;
-                return false;
-            }
-        }
+        m_position.y = originalY;
+        return false;
     }
     return true;
 }
@@ -102,12 +85,31 @@ bool Tetromino::PassesWall()
     return false;
 }
 
+bool Tetromino::BelowFloor()
+{
+    for (auto &m_worldSqrPos : GetTilePositions())
+    {
+        if (m_worldSqrPos.y >= (int)game_constants::k_gridSize.y) { return true; }
+    }
+    return false;
+}
+
 bool Tetromino::IntersectsTetromino()
 {
-    auto frozenTetrominos = m_tetroMgr->GetFrozenTetrominos();
+    const auto &frozenTetrominos = m_tetroMgr->GetFrozenTetrominos();
+    if (frozenTetrominos.empty()) { return false; }
     for (auto &frozenTetro : frozenTetrominos)
     {
         if (intersects(GetTilePositions(), frozenTetro->GetTilePositions())) { return true; }
+    }
+    return false;
+}
+
+bool Tetromino::TouchesCeiling()
+{
+    for (auto &m_worldSqrPos : GetTilePositions())
+    {
+        if (m_worldSqrPos.y <= 0) { return true; }
     }
     return false;
 }

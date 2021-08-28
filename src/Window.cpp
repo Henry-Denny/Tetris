@@ -48,6 +48,9 @@ void Window::HandleEvents()
                 case (sf::Keyboard::W):
                     m_tetroMgr->GetCurrentTetromino()->RotateCW();
                     break;
+                case (sf::Keyboard::S):
+                    m_tetroMgr->GetCurrentTetromino()->Fall();
+                    break;
                 default:
                     break;
             }
@@ -66,5 +69,6 @@ void Window::EndDraw()
     m_window.display();
 }
 
+void Window::SetDone(bool l_done) { m_done = l_done; }
 bool Window::IsDone() { return m_done; }
 sf::RenderWindow* Window::GetRenderWindow() { return &m_window; }

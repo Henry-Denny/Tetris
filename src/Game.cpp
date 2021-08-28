@@ -32,7 +32,10 @@ void Game::Update()
 
 void Game::Tick()
 {
-    m_tetroMgr.UpdateTetrominos();
+    if(!m_tetroMgr.Continue())
+    {
+        m_window.SetDone(true);
+    }
 }
 
 void Game::DrawScene()

@@ -23,6 +23,8 @@ public:
     void MoveLeft();
     void Draw(sf::RenderWindow *l_win);
 
+    bool TouchesCeiling();
+
     std::array<sf::Vector2i, 4> GetTilePositions();
 
 private:
@@ -33,6 +35,7 @@ private:
     sf::Vector2f m_CoR;
 
     bool PassesWall();
+    bool BelowFloor();
     bool IntersectsTetromino();
 };
 

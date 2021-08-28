@@ -28,7 +28,7 @@ public:
 
     void Reset();
     Tetromino* GetNextTetromino();
-    void UpdateTetrominos();
+    bool Continue();
     void DrawTetrominos(sf::RenderWindow *l_wind);
 
     Tetromino* GetCurrentTetromino();

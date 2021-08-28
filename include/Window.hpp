@@ -18,6 +18,7 @@ public:
     void BeginDraw();
     void EndDraw();
 
+    void SetDone(bool l_done);
     bool IsDone();
     sf::RenderWindow* GetRenderWindow();
 
