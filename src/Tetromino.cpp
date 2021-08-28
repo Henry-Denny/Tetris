@@ -1,16 +1,14 @@
 #include "Tetromino.hpp"
+#include "TetrominoManager.hpp"
 #include <iostream>
 
-Tetromino::Tetromino(std::array<sf::Vector2i, 4> l_squarePositions, sf::Vector2f l_centreOfRotation, sf::Color l_colour)
-    : m_squarePositions(l_squarePositions), m_CoR(l_centreOfRotation), m_frozen(false)
+Tetromino::Tetromino(TetrominoManager *l_tetrominoManager, const std::array<sf::Vector2i, 4> &l_squarePositions, sf::Vector2f l_centreOfRotation, sf::Color l_colour)
+    : m_squarePositions(l_squarePositions), m_CoR(l_centreOfRotation), m_tetroMgr(l_tetrominoManager)
 {
     m_position = sf::Vector2i((game_constants::k_gridSize.x / 2) - 1, 0);
 
     m_rect.setFillColor(l_colour);
-    m_rect.setSize(sf::Vector2f(game_constants::k_squareSize, game_constants::k_squareSize));
-    // Causes bugs
-    // m_rect.setOutlineThickness(0.5f);
-    // m_rect.setOutlineColor(sf::Color::Black);
+    m_rect.setSize(sf::Vector2f(game_constants::k_squareSize - 1, game_constants::k_squareSize - 1));
 }
 
 Tetromino::~Tetromino() {}
@@ -28,18 +26,47 @@ void Tetromino::Draw(sf::RenderWindow *l_win)
     }
 }
 
-void Tetromino::Fall()
+bool Tetromino::Fall()
 {
+    const std::vector<Tetromino*> &l_frozenTetrominos = m_tetroMgr->GetFrozenTetrominos();
+    int originalY = m_position.y;
     m_position.y += 1;
-    for (auto relSquarePos : m_squarePositions)
+    std::array<sf::Vector2i, 4> projectedTilePositions = GetTilePositions();
+    
+    for (auto &projTilePos : projectedTilePositions)
     {
-        sf::Vector2i squarePos = m_position + relSquarePos;
-        if (squarePos.y >= game_constants::k_gridSize.y - 1) { m_frozen = true; }
+        if (projTilePos.y >= game_constants::k_gridSize.y)
+        {
+            m_position.y = originalY;
+            return false;
+        }
     }
+    for (auto &projTilePos : projectedTilePositions)
+    {
+        for (auto &frozenTetro : l_frozenTetrominos)
+        {
+            if (intersects(projectedTilePositions, frozenTetro->GetTilePositions()))
+            {
+                m_position.y = originalY;
+                return false;
+            }
+        }
+    }
+    return true;
 }
 
-void Tetromino::MoveLeft() { m_position.x -= 1; }
-void Tetromino::MoveRight() { m_position.x += 1; }
+void Tetromino::MoveLeft()
+{
+    int l_originalX = m_position.x;
+    m_position.x -= 1;
+    if (PassesWall() || IntersectsTetromino()) { m_position.x = l_originalX; }
+}
+void Tetromino::MoveRight()
+{
+    int l_originalX = m_position.x;
+    m_position.x += 1;
+    if (PassesWall() || IntersectsTetromino()) { m_position.x = l_originalX; }
+}
 
 void Tetromino::RotateCW()
 {
@@ -56,4 +83,43 @@ void Tetromino::RotateCW()
     m_squarePositions = projectedSquares;
 }
 
-bool Tetromino::IsFrozen() { return m_frozen; }
+std::array<sf::Vector2i, 4> Tetromino::GetTilePositions()
+{
+    std::array<sf::Vector2i, 4> l_tilePositions;
+    for (int i = 0; i < l_tilePositions.size(); ++i)
+    {
+        l_tilePositions[i] = m_position + m_squarePositions[i];
+    }
+    return l_tilePositions;
+}
+
+bool Tetromino::PassesWall()
+{
+    for (auto &m_worldSqrPos : GetTilePositions())
+    {
+        if (m_worldSqrPos.x < 0 || m_worldSqrPos.x >= game_constants::k_gridSize.x) { return true; }
+    }
+    return false;
+}
+
+bool Tetromino::IntersectsTetromino()
+{
+    auto frozenTetrominos = m_tetroMgr->GetFrozenTetrominos();
+    for (auto &frozenTetro : frozenTetrominos)
+    {
+        if (intersects(GetTilePositions(), frozenTetro->GetTilePositions())) { return true; }
+    }
+    return false;
+}
+
+bool intersects(const std::array<sf::Vector2i, 4> &first, const std::array<sf::Vector2i, 4> &second)
+{
+    for (auto &posFirst : first)
+    {
+        for (auto &posSecond : second)
+        {
+            if (posFirst == posSecond) { return true; }
+        }
+    }
+    return false;
+}

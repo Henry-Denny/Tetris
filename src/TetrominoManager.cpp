@@ -32,12 +32,11 @@ void TetrominoManager::Reset()
 
 void TetrominoManager::UpdateTetrominos()
 {
-    if (m_currentTetromino->IsFrozen())
+    if (!m_currentTetromino->Fall())
     {
         m_frozenTetrominos.push_back(m_currentTetromino);
         m_currentTetromino = GetNextTetromino();
     }
-    m_currentTetromino->Fall();
     // If stuck --> freeze tetromino, create new tetromino
 }
 
@@ -57,6 +56,7 @@ Tetromino* TetrominoManager::CreateTetromino(TetrominoType l_type)
     case (TetrominoType::I):
         return new Tetromino
         (
+            this,
             { sf::Vector2i(0, 1), sf::Vector2i(1, 1), sf::Vector2i(2, 1), sf::Vector2i(3, 1) },
             sf::Vector2f(1.5f, 1.5f),
             sf::Color::Cyan
@@ -65,6 +65,7 @@ Tetromino* TetrominoManager::CreateTetromino(TetrominoType l_type)
     case (TetrominoType::J):
         return new Tetromino
         (
+            this,
             { sf::Vector2i(0, 0), sf::Vector2i(0, 1), sf::Vector2i(1, 1), sf::Vector2i(2, 1) },
             sf::Vector2f(1, 1),
             sf::Color::Blue
@@ -73,6 +74,7 @@ Tetromino* TetrominoManager::CreateTetromino(TetrominoType l_type)
     case (TetrominoType::L):
         return new Tetromino
         (
+            this,
             { sf::Vector2i(0, 1), sf::Vector2i(1, 1), sf::Vector2i(2, 1), sf::Vector2i(2, 0) },
             sf::Vector2f(1, 1),
             sf::Color(255, 127, 0)
@@ -81,6 +83,7 @@ Tetromino* TetrominoManager::CreateTetromino(TetrominoType l_type)
     case (TetrominoType::O):
         return new Tetromino
         (
+            this,
             { sf::Vector2i(1, 0), sf::Vector2i(1, 1), sf::Vector2i(2, 0), sf::Vector2i(2, 1) },
             sf::Vector2f(1.5f, 0.5f),
             sf::Color::Yellow
@@ -89,6 +92,7 @@ Tetromino* TetrominoManager::CreateTetromino(TetrominoType l_type)
     case (TetrominoType::S):
         return new Tetromino
         (
+            this,
             { sf::Vector2i(0, 1), sf::Vector2i(1, 1), sf::Vector2i(1, 0), sf::Vector2i(2, 0) },
             sf::Vector2f(1, 1),
             sf::Color::Green
@@ -97,6 +101,7 @@ Tetromino* TetrominoManager::CreateTetromino(TetrominoType l_type)
     case (TetrominoType::T):
         return new Tetromino
         (
+            this,
             { sf::Vector2i(0, 1), sf::Vector2i(1, 1), sf::Vector2i(2, 1), sf::Vector2i(1, 0) },
             sf::Vector2f(1, 1),
             sf::Color::Magenta);
@@ -104,6 +109,7 @@ Tetromino* TetrominoManager::CreateTetromino(TetrominoType l_type)
     case (TetrominoType::Z):
         return new Tetromino
         (
+            this,
             { sf::Vector2i(0, 0), sf::Vector2i(1, 0), sf::Vector2i(1, 1), sf::Vector2i(2, 1) },
             sf::Vector2f(1, 1),
             sf::Color::Red
@@ -122,3 +128,4 @@ Tetromino* TetrominoManager::GetNextTetromino()
 }
 
 Tetromino* TetrominoManager::GetCurrentTetromino() { return m_currentTetromino; }
+const std::vector<Tetromino*>& TetrominoManager::GetFrozenTetrominos() { return m_frozenTetrominos; }
