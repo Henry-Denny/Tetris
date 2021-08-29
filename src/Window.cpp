@@ -49,7 +49,7 @@ void Window::HandleEvents()
                     m_tetroMgr->GetCurrentTetromino()->RotateCW();
                     break;
                 case (sf::Keyboard::S):
-                    m_tetroMgr->GetCurrentTetromino()->Fall();
+                    m_tetroMgr->Continue();
                     break;
                 default:
                     break;
