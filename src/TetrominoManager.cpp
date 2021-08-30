@@ -1,7 +1,51 @@
 #include "TetrominoManager.hpp"
 #include <iostream>
 
-TetrominoManager::TetrominoManager() : m_currentTetromino(nullptr) {}
+TetrominoManager::TetrominoManager() : m_currentTetromino(nullptr)
+{
+    m_wallKickDataArr[0].emplace
+    (
+        Direction::Right,
+        std::array<sf::Vector2i, 4>{ sf::Vector2i(-1, 0), sf::Vector2i(-1, 1), sf::Vector2i(0, -2), sf::Vector2i(-1, -2) }
+    );
+    
+    m_wallKickDataArr[0].emplace
+    (
+        Direction::Down,
+        std::array<sf::Vector2i, 4>{ sf::Vector2i(1, 0), sf::Vector2i(1, -1), sf::Vector2i(0, 2), sf::Vector2i(1, 2) }
+    );
+    m_wallKickDataArr[0].emplace
+    (
+        Direction::Left,
+        std::array<sf::Vector2i, 4>{ sf::Vector2i(1, 0), sf::Vector2i(1, 1), sf::Vector2i(0, -2), sf::Vector2i(1, -2) }
+    );
+    m_wallKickDataArr[0].emplace
+    (
+        Direction::Up,
+        std::array<sf::Vector2i, 4>{ sf::Vector2i(-1, 0), sf::Vector2i(-1, -1), sf::Vector2i(0, 2), sf::Vector2i(-1, 2) }
+    );
+
+    m_wallKickDataArr[1].emplace
+    (
+        Direction::Right,
+        std::array<sf::Vector2i, 4>{ sf::Vector2i(-2, 0), sf::Vector2i(1, 0), sf::Vector2i(-2, -1), sf::Vector2i(1, 2) }
+    );
+    m_wallKickDataArr[1].emplace
+    (
+        Direction::Down,
+        std::array<sf::Vector2i, 4>{ sf::Vector2i(-1, 0), sf::Vector2i(2, 0), sf::Vector2i(-1, 2), sf::Vector2i(2, -1) }
+    );
+    m_wallKickDataArr[1].emplace
+    (
+        Direction::Left,
+        std::array<sf::Vector2i, 4>{ sf::Vector2i(2, 0), sf::Vector2i(-1, 0), sf::Vector2i(2, 1), sf::Vector2i(-1, -2) }
+    );
+    m_wallKickDataArr[1].emplace
+    (
+        Direction::Up,
+        std::array<sf::Vector2i, 4>{ sf::Vector2i(1, 0), sf::Vector2i(-2, 0), sf::Vector2i(1, -2), sf::Vector2i(-2, 1) }
+    );
+}
 
 TetrominoManager::~TetrominoManager()
 {
@@ -62,6 +106,7 @@ Tetromino* TetrominoManager::CreateTetromino(TetrominoType l_type)
         (
             this,
             { sf::Vector2i(0, 1), sf::Vector2i(1, 1), sf::Vector2i(2, 1), sf::Vector2i(3, 1) },
+            &m_wallKickDataArr[1],
             sf::Vector2f(1.5f, 1.5f),
             sf::Color::Cyan
         );
@@ -71,6 +116,7 @@ Tetromino* TetrominoManager::CreateTetromino(TetrominoType l_type)
         (
             this,
             { sf::Vector2i(0, 0), sf::Vector2i(0, 1), sf::Vector2i(1, 1), sf::Vector2i(2, 1) },
+            &m_wallKickDataArr[0],
             sf::Vector2f(1, 1),
             sf::Color::Blue
         );
@@ -80,6 +126,7 @@ Tetromino* TetrominoManager::CreateTetromino(TetrominoType l_type)
         (
             this,
             { sf::Vector2i(0, 1), sf::Vector2i(1, 1), sf::Vector2i(2, 1), sf::Vector2i(2, 0) },
+            &m_wallKickDataArr[0],
             sf::Vector2f(1, 1),
             sf::Color(255, 127, 0)
         );
@@ -89,6 +136,7 @@ Tetromino* TetrominoManager::CreateTetromino(TetrominoType l_type)
         (
             this,
             { sf::Vector2i(1, 0), sf::Vector2i(1, 1), sf::Vector2i(2, 0), sf::Vector2i(2, 1) },
+            &m_wallKickDataArr[0],
             sf::Vector2f(1.5f, 0.5f),
             sf::Color::Yellow
         );
@@ -98,6 +146,7 @@ Tetromino* TetrominoManager::CreateTetromino(TetrominoType l_type)
         (
             this,
             { sf::Vector2i(0, 1), sf::Vector2i(1, 1), sf::Vector2i(1, 0), sf::Vector2i(2, 0) },
+            &m_wallKickDataArr[0],
             sf::Vector2f(1, 1),
             sf::Color::Green
         );
@@ -107,6 +156,7 @@ Tetromino* TetrominoManager::CreateTetromino(TetrominoType l_type)
         (
             this,
             { sf::Vector2i(0, 1), sf::Vector2i(1, 1), sf::Vector2i(2, 1), sf::Vector2i(1, 0) },
+            &m_wallKickDataArr[0],
             sf::Vector2f(1, 1),
             sf::Color::Magenta);
         break;
@@ -115,6 +165,7 @@ Tetromino* TetrominoManager::CreateTetromino(TetrominoType l_type)
         (
             this,
             { sf::Vector2i(0, 0), sf::Vector2i(1, 0), sf::Vector2i(1, 1), sf::Vector2i(2, 1) },
+            &m_wallKickDataArr[0],
             sf::Vector2f(1, 1),
             sf::Color::Red
         );

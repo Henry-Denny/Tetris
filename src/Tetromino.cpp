@@ -1,8 +1,8 @@
 #include "Tetromino.hpp"
 #include "TetrominoManager.hpp"
 
-Tetromino::Tetromino(TetrominoManager *l_tetrominoManager, const std::array<sf::Vector2i, 4> &l_squarePositions, sf::Vector2f l_centreOfRotation, sf::Color l_colour)
-    : m_squarePositions(l_squarePositions), m_CoR(l_centreOfRotation), m_tetroMgr(l_tetrominoManager)
+Tetromino::Tetromino(TetrominoManager *l_tetrominoManager, const std::array<sf::Vector2i, 4> &l_squarePositions, std::unordered_map<Direction, std::array<sf::Vector2i, 4>> *l_wallKickData, sf::Vector2f l_centreOfRotation, sf::Color l_colour)
+    : m_squarePositions(l_squarePositions), m_CoR(l_centreOfRotation), m_tetroMgr(l_tetrominoManager), m_facing(Direction::Up), m_wallKick(l_wallKickData)
 {
     m_position = sf::Vector2i((game_constants::k_gridSize.x / 2) - 2, -2);
 
@@ -54,16 +54,21 @@ void Tetromino::MoveRight()
 void Tetromino::RotateCW()
 {
     const double pi = std::acos(-1);
-    std::array<sf::Vector2i, 4> projectedSquares;
+    std::array<sf::Vector2i, 4> originalSquares = m_squarePositions;
     for (int i = 0; i < m_squarePositions.size(); ++i)
     {
         sf::Vector2f offset(m_squarePositions[i].x - m_CoR.x, m_squarePositions[i].y - m_CoR.y);
         int projectedX = std::round(m_CoR.x + (std::cos(-pi / 2) * offset.x - std::sin(-pi / 2) * -offset.y));
         int projectedY = std::round(m_CoR.y - (std::sin(-pi / 2) * offset.x + std::cos(-pi / 2) * -offset.y));
-        projectedSquares[i] = sf::Vector2i(projectedX, projectedY);
+        m_squarePositions[i] = sf::Vector2i(projectedX, projectedY);
     }
     // Perform necessary checks
-    m_squarePositions = projectedSquares;
+    if (PassesWall() || IntersectsTetromino() || BelowFloor())
+    {
+        m_squarePositions = originalSquares;
+        return;
+    }
+    m_facing = Direction((int(m_facing) + 1) % 4);
 }
 
 std::array<sf::Vector2i, 4> Tetromino::GetTilePositions()

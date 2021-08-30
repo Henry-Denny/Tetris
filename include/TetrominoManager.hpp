@@ -37,6 +37,7 @@ public:
 private:
     Tetromino *m_currentTetromino;
     std::vector<Tetromino*> m_frozenTetrominos;
+    std::array<std::unordered_map<Direction, std::array<sf::Vector2i, 4>>, 2> m_wallKickDataArr;
 
     Tetromino* CreateTetromino(TetrominoType l_type);
     void DeleteTetrominos();
