@@ -43,7 +43,7 @@ private:
     std::array<sf::Vector2i, 4> m_squarePositions;
     sf::Vector2f m_CoR;
     Direction m_facing;
-    std::unordered_map<Direction, std::array<sf::Vector2i, 4>> *m_wallKick;
+    std::unordered_map<Direction, std::array<sf::Vector2i, 4>> *m_wallKickData;
 
     bool PassesWall();
     bool BelowFloor();

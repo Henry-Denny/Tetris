@@ -5,44 +5,44 @@ TetrominoManager::TetrominoManager() : m_currentTetromino(nullptr)
 {
     m_wallKickDataArr[0].emplace
     (
-        Direction::Right,
+        Direction::Up,
         std::array<sf::Vector2i, 4>{ sf::Vector2i(-1, 0), sf::Vector2i(-1, 1), sf::Vector2i(0, -2), sf::Vector2i(-1, -2) }
     );
     
     m_wallKickDataArr[0].emplace
     (
-        Direction::Down,
+        Direction::Right,
         std::array<sf::Vector2i, 4>{ sf::Vector2i(1, 0), sf::Vector2i(1, -1), sf::Vector2i(0, 2), sf::Vector2i(1, 2) }
     );
     m_wallKickDataArr[0].emplace
     (
-        Direction::Left,
+        Direction::Down,
         std::array<sf::Vector2i, 4>{ sf::Vector2i(1, 0), sf::Vector2i(1, 1), sf::Vector2i(0, -2), sf::Vector2i(1, -2) }
     );
     m_wallKickDataArr[0].emplace
     (
-        Direction::Up,
+        Direction::Left,
         std::array<sf::Vector2i, 4>{ sf::Vector2i(-1, 0), sf::Vector2i(-1, -1), sf::Vector2i(0, 2), sf::Vector2i(-1, 2) }
     );
 
     m_wallKickDataArr[1].emplace
     (
-        Direction::Right,
+        Direction::Up,
         std::array<sf::Vector2i, 4>{ sf::Vector2i(-2, 0), sf::Vector2i(1, 0), sf::Vector2i(-2, -1), sf::Vector2i(1, 2) }
     );
     m_wallKickDataArr[1].emplace
     (
-        Direction::Down,
+        Direction::Right,
         std::array<sf::Vector2i, 4>{ sf::Vector2i(-1, 0), sf::Vector2i(2, 0), sf::Vector2i(-1, 2), sf::Vector2i(2, -1) }
     );
     m_wallKickDataArr[1].emplace
     (
-        Direction::Left,
+        Direction::Down,
         std::array<sf::Vector2i, 4>{ sf::Vector2i(2, 0), sf::Vector2i(-1, 0), sf::Vector2i(2, 1), sf::Vector2i(-1, -2) }
     );
     m_wallKickDataArr[1].emplace
     (
-        Direction::Up,
+        Direction::Left,
         std::array<sf::Vector2i, 4>{ sf::Vector2i(1, 0), sf::Vector2i(-2, 0), sf::Vector2i(1, -2), sf::Vector2i(-2, 1) }
     );
 }

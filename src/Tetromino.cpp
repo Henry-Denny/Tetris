@@ -2,7 +2,7 @@
 #include "TetrominoManager.hpp"
 
 Tetromino::Tetromino(TetrominoManager *l_tetrominoManager, const std::array<sf::Vector2i, 4> &l_squarePositions, std::unordered_map<Direction, std::array<sf::Vector2i, 4>> *l_wallKickData, sf::Vector2f l_centreOfRotation, sf::Color l_colour)
-    : m_squarePositions(l_squarePositions), m_CoR(l_centreOfRotation), m_tetroMgr(l_tetrominoManager), m_facing(Direction::Up), m_wallKick(l_wallKickData)
+    : m_squarePositions(l_squarePositions), m_CoR(l_centreOfRotation), m_tetroMgr(l_tetrominoManager), m_facing(Direction::Up), m_wallKickData(l_wallKickData)
 {
     m_position = sf::Vector2i((game_constants::k_gridSize.x / 2) - 2, -2);
 
@@ -63,11 +63,24 @@ void Tetromino::RotateCW()
         m_squarePositions[i] = sf::Vector2i(projectedX, projectedY);
     }
     // Perform necessary checks
-    if (PassesWall() || IntersectsTetromino() || BelowFloor())
+    const auto &l_wallKickRow = m_wallKickData->at(m_facing);
+    int testNum = 0;
+    sf::Vector2i originalPos = m_position;
+    while (PassesWall() || IntersectsTetromino() || BelowFloor())
     {
-        m_squarePositions = originalSquares;
-        return;
+        if (testNum >= l_wallKickRow.size())
+        {
+            // Rotation has failed ==> set position, relative square positions to their original values
+            m_position = originalPos;
+            m_squarePositions = originalSquares;
+            return;
+        }
+
+        m_position = originalPos + sf::Vector2i(l_wallKickRow[testNum].x, -l_wallKickRow[testNum].y);
+
+        ++testNum;
     }
+    // Rotation has succeeded ==> increment direction
     m_facing = Direction((int(m_facing) + 1) % 4);
 }
 
