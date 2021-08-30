@@ -1,13 +1,14 @@
 #include "Tetromino.hpp"
 #include "TetrominoManager.hpp"
+#include <iostream>
 
 Tetromino::Tetromino(TetrominoManager *l_tetrominoManager, const std::array<sf::Vector2i, 4> &l_squarePositions, std::unordered_map<Direction, std::array<sf::Vector2i, 4>> *l_wallKickData, sf::Vector2f l_centreOfRotation, sf::Color l_colour)
-    : m_squarePositions(l_squarePositions), m_CoR(l_centreOfRotation), m_tetroMgr(l_tetrominoManager), m_facing(Direction::Up), m_wallKickData(l_wallKickData)
+    : m_squarePositions(l_squarePositions), m_CoR(l_centreOfRotation), m_tetroMgr(l_tetrominoManager), m_facing(Direction::Up), m_wallKickData(l_wallKickData), m_colour(l_colour)
 {
     m_position = sf::Vector2i((game_constants::k_gridSize.x / 2) - 2, -2);
 
     m_rect.setFillColor(l_colour);
-    m_rect.setSize(sf::Vector2f(game_constants::k_squareSize - 1, game_constants::k_squareSize - 1));
+    m_rect.setSize(sf::Vector2f(game_constants::k_squareSize - 3, game_constants::k_squareSize - 3));
 }
 
 Tetromino::~Tetromino() {}
@@ -27,7 +28,6 @@ void Tetromino::Draw(sf::RenderWindow *l_win)
 
 bool Tetromino::Fall()
 {
-    const std::vector<Tetromino*> &l_frozenTetrominos = m_tetroMgr->GetFrozenTetrominos();
     int originalY = m_position.y;
     m_position.y += 1;
     if (IntersectsTetromino() || BelowFloor())
@@ -94,6 +94,8 @@ std::array<sf::Vector2i, 4> Tetromino::GetTilePositions()
     return l_tilePositions;
 }
 
+sf::Color Tetromino::GetColour() { return m_colour; }
+
 bool Tetromino::PassesWall()
 {
     for (auto &m_worldSqrPos : GetTilePositions())
@@ -115,10 +117,10 @@ bool Tetromino::BelowFloor()
 bool Tetromino::IntersectsTetromino()
 {
     const auto &frozenTetrominos = m_tetroMgr->GetFrozenTetrominos();
-    if (frozenTetrominos.empty()) { return false; }
-    for (auto &frozenTetro : frozenTetrominos)
+    for (auto &l_tilePos : GetTilePositions())
     {
-        if (intersects(GetTilePositions(), frozenTetro->GetTilePositions())) { return true; }
+        if (l_tilePos.y < 0 || l_tilePos.y >= game_constants::k_gridSize.y) { continue; }
+        if (!frozenTetrominos[l_tilePos.x][l_tilePos.y]->empty) { return true; }
     }
     return false;
 }
@@ -128,18 +130,6 @@ bool Tetromino::TouchesCeiling()
     for (auto &m_worldSqrPos : GetTilePositions())
     {
         if (m_worldSqrPos.y <= 0) { return true; }
-    }
-    return false;
-}
-
-bool intersects(const std::array<sf::Vector2i, 4> &first, const std::array<sf::Vector2i, 4> &second)
-{
-    for (auto &posFirst : first)
-    {
-        for (auto &posSecond : second)
-        {
-            if (posFirst == posSecond) { return true; }
-        }
     }
     return false;
 }

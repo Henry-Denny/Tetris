@@ -9,6 +9,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "Constants.hpp"
+#include "Tile.hpp"
 
 class TetrominoManager;
 
@@ -35,9 +36,11 @@ public:
     bool TouchesCeiling();
 
     std::array<sf::Vector2i, 4> GetTilePositions();
+    sf::Color GetColour();
 
 private:
     TetrominoManager *m_tetroMgr;
+    sf::Color m_colour;
     sf::RectangleShape m_rect;
     sf::Vector2i m_position;
     std::array<sf::Vector2i, 4> m_squarePositions;
@@ -49,7 +52,5 @@ private:
     bool BelowFloor();
     bool IntersectsTetromino();
 };
-
-bool intersects(const std::array<sf::Vector2i, 4> &first, const std::array<sf::Vector2i, 4> &second);
 
 #endif

@@ -1,7 +1,8 @@
 #include "TetrominoManager.hpp"
 #include <iostream>
 
-TetrominoManager::TetrominoManager() : m_currentTetromino(nullptr)
+TetrominoManager::TetrominoManager()
+    : m_currentTetromino(nullptr), m_numBlocksInLine(game_constants::k_gridSize.y), m_frozenTetrominos(game_constants::k_gridSize.x, std::vector<Tile*>(game_constants::k_gridSize.y))
 {
     m_wallKickDataArr[0].emplace
     (
@@ -45,11 +46,37 @@ TetrominoManager::TetrominoManager() : m_currentTetromino(nullptr)
         Direction::Left,
         std::array<sf::Vector2i, 4>{ sf::Vector2i(1, 0), sf::Vector2i(-2, 0), sf::Vector2i(1, -2), sf::Vector2i(-2, 1) }
     );
+
+    SetupTiles();
 }
 
 TetrominoManager::~TetrominoManager()
 {
     DeleteTetrominos();
+    DeleteTiles();
+}
+
+void TetrominoManager::SetupTiles()
+{
+    for (int i = 0; i < m_frozenTetrominos.size(); ++i)
+    {
+        for (int j = 0; j < m_frozenTetrominos[i].size(); ++j)
+        {
+            Tile *tile = new Tile();
+            m_frozenTetrominos[i][j] = tile;
+        }
+    }
+}
+
+void TetrominoManager::DeleteTiles()
+{
+    for (int i = 0; i < m_frozenTetrominos.size(); ++i)
+    {
+        for (int j = 0; j < m_frozenTetrominos[i].size(); ++j)
+        {
+            delete m_frozenTetrominos[i][j];
+        }
+    }
 }
 
 void TetrominoManager::DeleteTetrominos()
@@ -59,19 +86,16 @@ void TetrominoManager::DeleteTetrominos()
         delete m_currentTetromino;
         m_currentTetromino = nullptr;
     }
-
-    if (m_frozenTetrominos.empty()) { return; }
-    while (m_frozenTetrominos.begin() != m_frozenTetrominos.end())
-    {
-        delete *(m_frozenTetrominos.begin());
-        m_frozenTetrominos.erase(m_frozenTetrominos.begin());
-    }
 }
 
 void TetrominoManager::Reset()
 {
     DeleteTetrominos();
     m_currentTetromino = GetNextTetromino();
+    for (auto itr = m_numBlocksInLine.begin(); itr != m_numBlocksInLine.end(); ++itr)
+    {
+        *itr = 0;
+    }
 }
 
 bool TetrominoManager::Continue()
@@ -82,17 +106,57 @@ bool TetrominoManager::Continue()
         {
             return false;
         }
-        m_frozenTetrominos.push_back(m_currentTetromino);
+
+        for (auto &squarePos : m_currentTetromino->GetTilePositions())
+        {
+            m_frozenTetrominos[squarePos.x][squarePos.y]->empty = false;
+            m_frozenTetrominos[squarePos.x][squarePos.y]->colour = m_currentTetromino->GetColour();
+        }
+        // UpdateLines();
+        // RemoveLines();
+        delete m_currentTetromino;
         m_currentTetromino = GetNextTetromino();
     }
     return true;
 }
 
+void TetrominoManager::UpdateLines()
+{
+    auto tilePositions = m_currentTetromino->GetTilePositions();
+    for (sf::Vector2i tilePos : tilePositions)
+    {
+        m_numBlocksInLine[tilePos.y] += 1;
+    }
+}
+
+void TetrominoManager::RemoveLines()
+{
+    int numLinesRemoved = 0;
+    for (int i = 0; i < game_constants::k_gridSize.y; ++i)
+    {
+        if (m_numBlocksInLine[i] == game_constants::k_gridSize.x)
+        {
+            // Line i is full ==> Remove blocks, increase score
+            std::cout << "Line " << i << " is full" << std::endl;
+            numLinesRemoved += 1;
+        }
+    }
+}
+
 void TetrominoManager::DrawTetrominos(sf::RenderWindow *l_wind)
 {
-    for (auto &itr : m_frozenTetrominos)
+    sf::RectangleShape rect;
+    rect.setSize({game_constants::k_squareSize - 3, game_constants::k_squareSize - 3});
+    for (int x = 0; x < m_frozenTetrominos.size(); ++x)
     {
-        itr->Draw(l_wind);
+        for (int y = 0; y < m_frozenTetrominos[x].size(); ++y)
+        {
+            sf::Vector2f l_pos(x * game_constants::k_squareSize, y * game_constants::k_squareSize);
+            rect.setPosition(l_pos);
+            sf::Color l_colour = m_frozenTetrominos[x][y]->empty ? sf::Color(10, 10, 10) : m_frozenTetrominos[x][y]->colour;
+            rect.setFillColor(l_colour);
+            l_wind->draw(rect);
+        }
     }
     m_currentTetromino->Draw(l_wind);
 }
@@ -182,4 +246,4 @@ Tetromino* TetrominoManager::GetNextTetromino()
 }
 
 Tetromino* TetrominoManager::GetCurrentTetromino() { return m_currentTetromino; }
-const std::vector<Tetromino*>& TetrominoManager::GetFrozenTetrominos() { return m_frozenTetrominos; }
+const std::vector<std::vector<Tile*>>& TetrominoManager::GetFrozenTetrominos() { return m_frozenTetrominos; }

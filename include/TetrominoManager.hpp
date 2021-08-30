@@ -6,6 +6,7 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "Tile.hpp"
 #include "Tetromino.hpp"
 
 enum class TetrominoType
@@ -27,20 +28,27 @@ public:
     ~TetrominoManager();
 
     void Reset();
-    Tetromino* GetNextTetromino();
+    
     bool Continue();
     void DrawTetrominos(sf::RenderWindow *l_wind);
 
     Tetromino* GetCurrentTetromino();
-    const std::vector<Tetromino*>& GetFrozenTetrominos();
+    const std::vector<std::vector<Tile*>>& GetFrozenTetrominos();
 
 private:
     Tetromino *m_currentTetromino;
-    std::vector<Tetromino*> m_frozenTetrominos;
+    std::vector<std::vector<Tile*>> m_frozenTetrominos;
     std::array<std::unordered_map<Direction, std::array<sf::Vector2i, 4>>, 2> m_wallKickDataArr;
+    std::vector<int> m_numBlocksInLine;
 
     Tetromino* CreateTetromino(TetrominoType l_type);
     void DeleteTetrominos();
+    void SetupTiles();
+    void DeleteTiles();
+
+    void UpdateLines();
+    void RemoveLines();
+    Tetromino* GetNextTetromino();
 };
 
 #endif
