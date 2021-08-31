@@ -23,6 +23,7 @@ public:
 
 private:
     void Tick();
+    void ProcessChanges(int l_linesRemoved);
 
     Window m_window;
     TetrominoManager m_tetroMgr;
@@ -30,6 +31,8 @@ private:
     float m_elapsed;
 
     int m_score;
+    int m_level;
+    int m_linesRemovedInLvl;
     bool m_lost;
 };
 

@@ -34,12 +34,14 @@ public:
 
     Tetromino* GetCurrentTetromino();
     const std::vector<std::vector<Tile*>>& GetFrozenTetrominos();
+    int GetLinesRemoved();
 
 private:
     Tetromino *m_currentTetromino;
     std::vector<std::vector<Tile*>> m_frozenTetrominos;
     std::array<std::unordered_map<Direction, std::array<sf::Vector2i, 4>>, 2> m_wallKickDataArr;
     std::vector<int> m_numBlocksInLine;
+    int m_linesRemoved;
 
     Tetromino* CreateTetromino(TetrominoType l_type);
     void DeleteTetrominos();

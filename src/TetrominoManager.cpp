@@ -96,6 +96,7 @@ void TetrominoManager::Reset()
     {
         *itr = 0;
     }
+    m_linesRemoved = 0;
 }
 
 bool TetrominoManager::Continue()
@@ -131,13 +132,12 @@ void TetrominoManager::UpdateLines()
         if (tilePos.y < lower) { lower = tilePos.y; }
     }
     
-    int numLinesRemoved = 0;
     for (int i = lower; i < upper + 1; ++i)
     {
         if (m_numBlocksInLine[i] == game_constants::k_gridSize.x)
         {
             RemoveLine(i);
-            ++numLinesRemoved;
+            ++m_linesRemoved;
         }
     }
 }
@@ -260,3 +260,9 @@ Tetromino* TetrominoManager::GetNextTetromino()
 
 Tetromino* TetrominoManager::GetCurrentTetromino() { return m_currentTetromino; }
 const std::vector<std::vector<Tile*>>& TetrominoManager::GetFrozenTetrominos() { return m_frozenTetrominos; }
+int TetrominoManager::GetLinesRemoved()
+{
+    int temp = m_linesRemoved;
+    m_linesRemoved = 0;
+    return temp;
+}
