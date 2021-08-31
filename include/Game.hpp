@@ -5,6 +5,7 @@
 
 #include "Window.hpp"
 #include "TetrominoManager.hpp"
+#include "InfoBox.hpp"
 
 class Game
 {
@@ -27,6 +28,7 @@ private:
 
     Window m_window;
     TetrominoManager m_tetroMgr;
+    InfoBox m_infoBox;
     sf::Clock m_clock;
     float m_elapsed;
 

@@ -1,8 +1,7 @@
 #include "Game.hpp"
 #include "Constants.hpp"
-#include <iostream>
 
-Game::Game() : m_window(&m_tetroMgr)
+Game::Game() : m_window(&m_tetroMgr), m_infoBox(m_level, m_score)
 {
     Setup();
     RestartClock();
@@ -15,6 +14,7 @@ void Game::Setup()
     m_tetroMgr.Reset();
     m_score = 0;
     m_level = 1;
+    m_infoBox.UpdateValues(m_level, m_score);
     m_linesRemovedInLvl = 0;
     m_lost = false;
 }
@@ -43,6 +43,7 @@ void Game::Tick()
     if (l_linesRemoved > 0)
     {
         ProcessChanges(l_linesRemoved);
+        m_infoBox.UpdateValues(m_level, m_score);
     }
 }
 
@@ -67,7 +68,6 @@ void Game::ProcessChanges(int l_linesRemoved)
         m_score += 40000 * m_level;
         break;
     }
-    std::cout << "Score: " << m_score << std::endl;
 
     m_linesRemovedInLvl += l_linesRemoved;
     if (m_linesRemovedInLvl >= 10)
@@ -82,6 +82,7 @@ void Game::DrawScene()
 {
     m_window.BeginDraw();
     m_tetroMgr.DrawTetrominos(m_window.GetRenderWindow());
+    m_infoBox.Draw(m_window.GetRenderWindow());
     m_window.EndDraw();
 }
 
