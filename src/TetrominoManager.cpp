@@ -112,8 +112,7 @@ bool TetrominoManager::Continue()
             m_frozenTetrominos[squarePos.x][squarePos.y]->empty = false;
             m_frozenTetrominos[squarePos.x][squarePos.y]->colour = m_currentTetromino->GetColour();
         }
-        // UpdateLines();
-        // RemoveLines();
+        UpdateLines();
         delete m_currentTetromino;
         m_currentTetromino = GetNextTetromino();
     }
@@ -123,24 +122,38 @@ bool TetrominoManager::Continue()
 void TetrominoManager::UpdateLines()
 {
     auto tilePositions = m_currentTetromino->GetTilePositions();
+    int upper = 0;
+    int lower = game_constants::k_gridSize.y - 1;
     for (sf::Vector2i tilePos : tilePositions)
     {
-        m_numBlocksInLine[tilePos.y] += 1;
+        ++m_numBlocksInLine[tilePos.y];
+        if (tilePos.y > upper) { upper = tilePos.y; }
+        if (tilePos.y < lower) { lower = tilePos.y; }
     }
-}
-
-void TetrominoManager::RemoveLines()
-{
+    
     int numLinesRemoved = 0;
-    for (int i = 0; i < game_constants::k_gridSize.y; ++i)
+    for (int i = lower; i < upper + 1; ++i)
     {
         if (m_numBlocksInLine[i] == game_constants::k_gridSize.x)
         {
-            // Line i is full ==> Remove blocks, increase score
-            std::cout << "Line " << i << " is full" << std::endl;
-            numLinesRemoved += 1;
+            RemoveLine(i);
+            ++numLinesRemoved;
         }
     }
+}
+
+void TetrominoManager::RemoveLine(int row)
+{
+    for (int y = row; y > 0; --y)
+    {
+        for (int x = 0; x < m_frozenTetrominos.size(); ++x)
+        {
+            m_frozenTetrominos[x][y]->empty = m_frozenTetrominos[x][y - 1]->empty;
+            m_frozenTetrominos[x][y]->colour = m_frozenTetrominos[x][y - 1]->colour;
+            m_numBlocksInLine[y] = m_numBlocksInLine[y - 1];
+        }
+    }
+    m_numBlocksInLine[0] = 0;
 }
 
 void TetrominoManager::DrawTetrominos(sf::RenderWindow *l_wind)
@@ -153,7 +166,7 @@ void TetrominoManager::DrawTetrominos(sf::RenderWindow *l_wind)
         {
             sf::Vector2f l_pos(x * game_constants::k_squareSize, y * game_constants::k_squareSize);
             rect.setPosition(l_pos);
-            sf::Color l_colour = m_frozenTetrominos[x][y]->empty ? sf::Color(10, 10, 10) : m_frozenTetrominos[x][y]->colour;
+            sf::Color l_colour = m_frozenTetrominos[x][y]->empty ? sf::Color(12, 12, 12) : m_frozenTetrominos[x][y]->colour;
             rect.setFillColor(l_colour);
             l_wind->draw(rect);
         }

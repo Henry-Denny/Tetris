@@ -47,7 +47,7 @@ private:
     void DeleteTiles();
 
     void UpdateLines();
-    void RemoveLines();
+    void RemoveLine(int row);
     Tetromino* GetNextTetromino();
 };
 
