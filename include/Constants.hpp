@@ -5,7 +5,7 @@
 
 namespace game_constants
 {
-    const float k_tickTime = 0.5f;
+    const float k_tickTimeDecrement = 0.1f;
     const int k_squareSize = 64;
     const sf::Vector2u k_gridSize(10, 20);
 }

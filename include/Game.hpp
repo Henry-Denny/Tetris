@@ -31,6 +31,7 @@ private:
     InfoBox m_infoBox;
     sf::Clock m_clock;
     float m_elapsed;
+    float m_tickTime;
 
     int m_score;
     int m_level;

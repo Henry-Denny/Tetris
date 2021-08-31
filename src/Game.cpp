@@ -1,7 +1,7 @@
 #include "Game.hpp"
 #include "Constants.hpp"
 
-Game::Game() : m_window(&m_tetroMgr), m_infoBox(m_level, m_score)
+Game::Game() : m_window(&m_tetroMgr), m_infoBox(m_level, m_score), m_tickTime(0.5f)
 {
     Setup();
     RestartClock();
@@ -26,10 +26,10 @@ void Game::HandleInput()
 
 void Game::Update()
 {
-    if (m_elapsed >= game_constants::k_tickTime)
+    if (m_elapsed >= m_tickTime)
     {
         Tick();
-        m_elapsed -= game_constants::k_tickTime;
+        m_elapsed -= m_tickTime;
     }
 }
 
@@ -70,11 +70,16 @@ void Game::ProcessChanges(int l_linesRemoved)
     }
 
     m_linesRemovedInLvl += l_linesRemoved;
-    if (m_linesRemovedInLvl >= 10)
+    if (m_linesRemovedInLvl >= 5)
     {
         m_level += 1;
         m_linesRemovedInLvl = 0;
+
         // Change Tick Time
+        if (m_level <= 5)
+        {
+            m_tickTime -= game_constants::k_tickTimeDecrement;
+        }
     }
 }
 
