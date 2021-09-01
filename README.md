@@ -1,6 +1,6 @@
 # Tetris
-![Tetris](tetris.png)
 Tetris written in C++ using the SFML library.
+![Tetris](tetris.png)
 
 # Gameplay
 The standard rules of Tetris apply.
