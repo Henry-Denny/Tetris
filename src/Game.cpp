@@ -5,6 +5,11 @@ Game::Game() : m_window(&m_tetroMgr), m_infoBox(m_level, m_score), m_tickTime(0.
 {
     Setup();
     RestartClock();
+    if (m_tetrisTheme.openFromFile("./res/tetris.ogg"))
+    {
+        m_tetrisTheme.setLoop(true);
+        m_tetrisTheme.play();
+    }
 }
 
 Game::~Game() {}

@@ -2,6 +2,7 @@
 #define GAME_HPP
 
 #include <SFML/System.hpp>
+#include <SFML/Audio.hpp>
 
 #include "Window.hpp"
 #include "TetrominoManager.hpp"
@@ -32,6 +33,7 @@ private:
     sf::Clock m_clock;
     float m_elapsed;
     float m_tickTime;
+    sf::Music m_tetrisTheme;
 
     int m_score;
     int m_level;
