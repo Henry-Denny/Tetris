@@ -1,7 +1,7 @@
 # Tetris
 Tetris written in C++ using the SFML library.
 
-<img src="tetris.png" alt="Tetris" width="400"/>
+<img src="tetris.png" alt="Tetris" width="250"/>
 
 # Gameplay
 The standard rules of Tetris apply.
