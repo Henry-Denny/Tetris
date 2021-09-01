@@ -166,7 +166,7 @@ void TetrominoManager::DrawTetrominos(sf::RenderWindow *l_wind)
         {
             sf::Vector2f l_pos(x * game_constants::k_squareSize, y * game_constants::k_squareSize);
             rect.setPosition(l_pos);
-            sf::Color l_colour = m_frozenTetrominos[x][y]->empty ? sf::Color(12, 12, 12) : m_frozenTetrominos[x][y]->colour;
+            sf::Color l_colour = m_frozenTetrominos[x][y]->empty ? ((x + y + 1) % 5 ? sf::Color(12, 12, 12) : sf::Color(24, 24, 24)) : m_frozenTetrominos[x][y]->colour;
             rect.setFillColor(l_colour);
             l_wind->draw(rect);
         }
